@@ -8,7 +8,23 @@ use MathArray: all;
 use Structures: all;
 use StdIO: all;
 
+#ifndef EMNIST
 #define CATEGORIES 10
+#define TRAIN_SIZE 60000
+#define TRAIN_IMG "data/EMNIST/raw/emnist-mnist-train-images-idx3-ubyte"
+#define TRAIN_LAB "data/EMNIST/raw/emnist-mnist-train-labels-idx1-ubyte"
+#define TEST_SIZE 10000
+#define TEST_IMG "data/EMNIST/raw/emnist-mnist-test-images-idx3-ubyte"
+#define TEST_LAB "data/EMNIST/raw/emnist-mnist-test-labels-idx1-ubyte"
+#else /* EMNIST */
+#define CATEGORIES 49
+#define TRAIN_SIZE 112800
+#define TRAIN_IMG "data/EMNIST/raw/emnist-balanced-train-images-idx3-ubyte"
+#define TRAIN_LAB "data/EMNIST/raw/emnist-balanced-train-labels-idx1-ubyte"
+#define TEST_SIZE 18800
+#define TEST_IMG "data/EMNIST/raw/emnist-balanced-test-images-idx3-ubyte"
+#define TEST_LAB "data/EMNIST/raw/emnist-balanced-test-labels-idx1-ubyte"
+#endif /* EMNIST */
 
 //specialize float[*] MultiConv( float[28,28] in, float[6,5,5] weights, float[6] bias);
 //specialize float[*] MultiConv( float[6,12,12] in, float[12,6,5,5] weights, float[12] bias);
@@ -17,6 +33,7 @@ use StdIO: all;
 specialize float[*], float[*], float[*] BackMultiConv( float[6,24,24] d_out, float[6,5,5] weights, float[28,28] in, float[6] bias);
 specialize float[*], float[*], float[*] BackMultiConv( float[12,1,8,8] d_out, float[12,6,5,5] weights, float[6,12,12] in, float[12] bias);
 specialize float[*], float[*], float[*] BackMultiConv( float[CATEGORIES,1,1,1,1] d_out, float[CATEGORIES,12,1,4,4] weights, float[12,1,4,4] in, float[CATEGORIES] bias);
+specialize int MaxPos( float[CATEGORIES,1,1,1,1] output);
 
 //specialize float[*] BackIn( float[24,24] d_out, float[5,5] weights, float[28,28] in);
 //specialize float[*] BackIn( float[1,8,8] d_out, float[6,5,5] weights, float[6,12,12] in);
@@ -169,8 +186,7 @@ int[.], double TestZhangFlop( int[.] in_shp, int[.] k1_shp, int[.] b1_shp,
 
 int main()
 {
-   
-   epochs, batchsize, trainings, tests, rate = CnnReadParameters( 20, 100, 1000, 10000, 0.5f);
+   epochs, batchsize, trainings, tests, rate = CnnReadParameters( 10, 100, 10000, 10000, 0.05f);
 
    k1 = genarray( [6,5,5], 1f/25f);
    b1 = genarray( [6], 1f/6f);
@@ -180,19 +196,19 @@ int main()
    b = genarray( [CATEGORIES], 1f/tof(CATEGORIES));
 
    printf( "Reading training images ...\n");
-   training_images = ( float[60000,28,28]) mnist::ReadImages( "tutorial/train-images.idx3-ubyte");
+   training_images = ( float[TRAIN_SIZE,28,28]) mnist::ReadImages( TRAIN_IMG);
    printf( "Read %d training images ...\n", shape(training_images)[0]);
 
    printf( "Reading training labels ...\n");
-   training_labels = ( int[60000]) mnist::ReadLabels( CATEGORIES, "tutorial/train-labels.idx1-ubyte");
+   training_labels = ( int[TRAIN_SIZE]) mnist::ReadLabels( CATEGORIES, TRAIN_LAB);
    printf( "Read %d training labels ...\n", shape(training_labels)[0]);
 
    printf( "Reading test images ...\n");
-   test_images = (float[10000,28,28])mnist::ReadImages( "tutorial/t10k-images.idx3-ubyte");
+   test_images = (float[TEST_SIZE,28,28])mnist::ReadImages( TEST_IMG);
    printf( "Read %d training images ...\n", shape(test_images)[0]);
 
    printf( "Reading test labels ...\n");
-   test_labels = (int[10000])mnist::ReadLabels( CATEGORIES, "tutorial/t10k-labels.idx1-ubyte");
+   test_labels = (int[TEST_SIZE])mnist::ReadLabels( CATEGORIES, TEST_LAB);
    printf( "Read %d training labels ...\n", shape(test_labels)[0]);
 
    printf( "Running Zhang with %d epochs, batchsize %d, %d training images, %d tests, and a rate of %f\n",
@@ -304,6 +320,3 @@ int main()
 
    return 0;
 }
-  
-
-
