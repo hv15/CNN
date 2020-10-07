@@ -27,8 +27,9 @@ cnn_%_mt: zhang.sac host/mt-pth/libmnistMod.so host/mt-pth/libcnnMod.so
 cnn_%_cuda: zhang.sac host/cuda/libmnistMod.so host/cuda/libcnnMod.so
 	$(SAC2C_CALL) -t cuda -noEMRCI -D$(call UC,$*) -o $@ $<
 
+# we disable CUADE because of error in rewrite
 cnn_%_cuda_reg: zhang.sac host/cuda-reg/libmnistMod.so host/cuda-reg/libcnnMod.so
-	$(SAC2C_CALL) -t cuda_reg -noEMRCI -doCUAD -doCUADE -D$(call UC,$*) -o $@ $<
+	$(SAC2C_CALL) -t cuda_reg -doEMRCI -doCUAD -noCUADE -D$(call UC,$*) -o $@ $<
 
 kaggle_%_seq: kaggle-1fc.sac host/seq/libmnistMod.so host/seq/libcnnMod.so
 	$(SAC2C_CALL) -t seq -noEMRCI -D$(call UC,$*) -o $@ $<
@@ -39,8 +40,9 @@ kaggle_%_mt: kaggle-1fc.sac host/mt-pth/libmnistMod.so host/mt-pth/libcnnMod.so
 kaggle_%_cuda: kaggle-1fc.sac host/cuda/libmnistMod.so host/cuda/libcnnMod.so
 	$(SAC2C_CALL) -t cuda -noEMRCI -D$(call UC,$*) -o $@ $<
 
+# we disable CUADE because of error in rewrite
 kaggle_%_cuda_reg: kaggle-1fc.sac host/cuda-reg/libmnistMod.so host/cuda-reg/libcnnMod.so
-	$(SAC2C_CALL) -t cuda_reg -noEMRCI -doCUAD -doCUADE -D$(call UC,$*) -o $@ $<
+	$(SAC2C_CALL) -t cuda_reg -doEMRCI -doCUAD -noCUADE -D$(call UC,$*) -o $@ $<
 
 # targets to build libraries
 host/seq/lib%Mod.so: %.sac
