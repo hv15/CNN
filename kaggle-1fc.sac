@@ -8,7 +8,23 @@ use MathArray: all;
 use Structures: all;
 use StdIO: all;
 
+#ifndef EMNIST
+#define CATEGORIES 10
+#define TRAIN_SIZE 60000
+#define TRAIN_IMG "data/EMNIST/raw/emnist-mnist-train-images-idx3-ubyte"
+#define TRAIN_LAB "data/EMNIST/raw/emnist-mnist-train-labels-idx1-ubyte"
+#define TEST_SIZE 10000
+#define TEST_IMG "data/EMNIST/raw/emnist-mnist-test-images-idx3-ubyte"
+#define TEST_LAB "data/EMNIST/raw/emnist-mnist-test-labels-idx1-ubyte"
+#else /* EMNIST */
 #define CATEGORIES 47
+#define TRAIN_SIZE 112800
+#define TRAIN_IMG "data/EMNIST/raw/emnist-balanced-train-images-idx3-ubyte"
+#define TRAIN_LAB "data/EMNIST/raw/emnist-balanced-train-labels-idx1-ubyte"
+#define TEST_SIZE 18800
+#define TEST_IMG "data/EMNIST/raw/emnist-balanced-test-images-idx3-ubyte"
+#define TEST_LAB "data/EMNIST/raw/emnist-balanced-test-labels-idx1-ubyte"
+#endif /* EMNIST */
 
 //specialize float[*] MultiConv( float[28,28] in, float[6,5,5] weights, float[6] bias);
 //specialize float[*] MultiConv( float[6,12,12] in, float[12,6,5,5] weights, float[12] bias);
@@ -17,6 +33,7 @@ use StdIO: all;
 specialize float[*], float[*], float[*] BackMultiConv( float[64,24,24] d_out, float[64,5,5] weights, float[28,28] in, float[6] bias);
 specialize float[*], float[*], float[*] BackMultiConv( float[128,1,8,8] d_out, float[128,64,5,5] weights, float[64,12,12] in, float[12] bias);
 specialize float[*], float[*], float[*] BackMultiConv( float[CATEGORIES,1,1,1,1] d_out, float[CATEGORIES,128,1,4,4] weights, float[128,1,4,4] in, float[CATEGORIES] bias);
+specialize int MaxPos( float[CATEGORIES,1,1,1,1] output);
 
 //specialize float[*] BackIn( float[24,24] d_out, float[5,5] weights, float[28,28] in);
 //specialize float[*] BackIn( float[1,8,8] d_out, float[6,5,5] weights, float[6,12,12] in);

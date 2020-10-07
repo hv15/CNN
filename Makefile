@@ -7,13 +7,15 @@ SAC2C_CALL = $(SAC2C) $(SACFLAGS)
 # uppcase function
 UC = $(shell echo '$1' | tr '[:lower:]' '[:upper:]')
 
-.PHONY: all mnist emnist
+.PHONY: all mnist emnist kaggle_mnist kaggle_emnist
 .SECONDARY:
 
-all: mnist emnist
+all: cnn_mnist cnn_emnist kaggle_mnist kaggle_emnist
 
 mnist: cnn_mnist_seq cnn_mnist_mt cnn_mnist_cuda cnn_mnist_cuda_reg
 emnist: cnn_emnist_seq cnn_emnist_mt cnn_emnist_cuda cnn_emnist_cuda_reg
+kaggle_mnist: kaggle_mnist_seq kaggle_mnist_mt kaggle_mnist_cuda kaggle_mnist_cuda_reg
+kaggle_emnist: kaggle_emnist_seq kaggle_emnist_mt kaggle_emnist_cuda kaggle_emnist_cuda_reg
 
 # targets to build binaries
 cnn_%_seq: zhang.sac host/seq/libmnistMod.so host/seq/libcnnMod.so
@@ -26,6 +28,18 @@ cnn_%_cuda: zhang.sac host/cuda/libmnistMod.so host/cuda/libcnnMod.so
 	$(SAC2C_CALL) -t cuda -noEMRCI -D$(call UC,$*) -o $@ $<
 
 cnn_%_cuda_reg: zhang.sac host/cuda-reg/libmnistMod.so host/cuda-reg/libcnnMod.so
+	$(SAC2C_CALL) -t cuda_reg -noEMRCI -doCUAD -doCUADE -D$(call UC,$*) -o $@ $<
+
+kaggle_%_seq: kaggle-1fc.sac host/seq/libmnistMod.so host/seq/libcnnMod.so
+	$(SAC2C_CALL) -t seq -noEMRCI -D$(call UC,$*) -o $@ $<
+
+kaggle_%_mt: kaggle-1fc.sac host/mt-pth/libmnistMod.so host/mt-pth/libcnnMod.so
+	$(SAC2C_CALL) -minmtsize 50 -t mt_pth -noEMRCI -D$(call UC,$*) -o $@ $<
+
+kaggle_%_cuda: kaggle-1fc.sac host/cuda/libmnistMod.so host/cuda/libcnnMod.so
+	$(SAC2C_CALL) -t cuda -noEMRCI -D$(call UC,$*) -o $@ $<
+
+kaggle_%_cuda_reg: kaggle-1fc.sac host/cuda-reg/libmnistMod.so host/cuda-reg/libcnnMod.so
 	$(SAC2C_CALL) -t cuda_reg -noEMRCI -doCUAD -doCUADE -D$(call UC,$*) -o $@ $<
 
 # targets to build libraries
@@ -45,3 +59,4 @@ host/cuda-reg/lib%Mod.so: %.sac
 clean:
 	$(RM) -r host tree
 	$(RM) cnn_*
+	$(RM) kaggle_*
