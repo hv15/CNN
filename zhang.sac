@@ -17,7 +17,7 @@ use StdIO: all;
 #define TEST_IMG "data/EMNIST/raw/emnist-mnist-test-images-idx3-ubyte"
 #define TEST_LAB "data/EMNIST/raw/emnist-mnist-test-labels-idx1-ubyte"
 #else /* EMNIST */
-#define CATEGORIES 49
+#define CATEGORIES 47
 #define TRAIN_SIZE 112800
 #define TRAIN_IMG "data/EMNIST/raw/emnist-balanced-train-images-idx3-ubyte"
 #define TRAIN_LAB "data/EMNIST/raw/emnist-balanced-train-labels-idx1-ubyte"
