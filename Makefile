@@ -13,8 +13,8 @@ UC = $(shell echo '$1' | tr '[:lower:]' '[:upper:]')
 all: cnn_mnist cnn_emnist kaggle_mnist kaggle_emnist
 quick: cnn_mnist_seq cnn_emnist_seq
 
-mnist: cnn_mnist_seq cnn_mnist_mt cnn_mnist_cuda cnn_mnist_cuda_reg
-emnist: cnn_emnist_seq cnn_emnist_mt cnn_emnist_cuda cnn_emnist_cuda_reg
+cnn_mnist: cnn_mnist_seq cnn_mnist_mt cnn_mnist_cuda cnn_mnist_cuda_reg
+cnn_emnist: cnn_emnist_seq cnn_emnist_mt cnn_emnist_cuda cnn_emnist_cuda_reg
 kaggle_mnist: kaggle_mnist_seq kaggle_mnist_mt kaggle_mnist_cuda kaggle_mnist_cuda_reg
 kaggle_emnist: kaggle_emnist_seq kaggle_emnist_mt kaggle_emnist_cuda kaggle_emnist_cuda_reg
 
