@@ -11,11 +11,15 @@ use StdIO: all;
 #ifndef EMNIST
 #define CATEGORIES 10
 #define TRAIN_SIZE 60000
-#define TRAIN_IMG "data/EMNIST/raw/emnist-mnist-train-images-idx3-ubyte"
-#define TRAIN_LAB "data/EMNIST/raw/emnist-mnist-train-labels-idx1-ubyte"
+//#define TRAIN_IMG "data/EMNIST/raw/emnist-mnist-train-images-idx3-ubyte"
+//#define TRAIN_LAB "data/EMNIST/raw/emnist-mnist-train-labels-idx1-ubyte"
+#define TRAIN_IMG "data/MNIST/raw/train-images-idx3-ubyte"
+#define TRAIN_LAB "data/MNIST/raw/train-labels-idx1-ubyte"
 #define TEST_SIZE 10000
-#define TEST_IMG "data/EMNIST/raw/emnist-mnist-test-images-idx3-ubyte"
-#define TEST_LAB "data/EMNIST/raw/emnist-mnist-test-labels-idx1-ubyte"
+//#define TEST_IMG "data/EMNIST/raw/emnist-mnist-test-images-idx3-ubyte"
+//#define TEST_LAB "data/EMNIST/raw/emnist-mnist-test-labels-idx1-ubyte"
+#define TEST_IMG "data/MNIST/raw/t10k-images-idx3-ubyte"
+#define TEST_LAB "data/MNIST/raw/t10k-labels-idx1-ubyte"
 #else /* EMNIST */
 #define CATEGORIES 47
 #define TRAIN_SIZE 112800
@@ -219,7 +223,7 @@ int main()
 
    i1 = getInterval( "training", 0);
    i2 = getInterval( "test", 1);
-   
+
    k1_shp, b1_shp, k2_shp, b2_shp, fc_shp, b_shp, err_shp, flops = 
              TrainZhangFlop( shape( training_images[0]), shape(k1), shape(b1),
                              shape(k2), shape(b2),
@@ -274,7 +278,7 @@ int main()
          }
          printf( "The mean error of epoch %d is %f\n",
                  epoch,
-                 error / tod( trainings) );
+                 error / 10.0/ tod( trainings) );
       }
       end( i1);
       printResult( i1);
