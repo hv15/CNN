@@ -11,11 +11,15 @@ use StdIO: all;
 #ifndef EMNIST
 #define CATEGORIES 10
 #define TRAIN_SIZE 60000
-#define TRAIN_IMG "data/EMNIST/raw/emnist-mnist-train-images-idx3-ubyte"
-#define TRAIN_LAB "data/EMNIST/raw/emnist-mnist-train-labels-idx1-ubyte"
+//#define TRAIN_IMG "data/EMNIST/raw/emnist-mnist-train-images-idx3-ubyte"
+//#define TRAIN_LAB "data/EMNIST/raw/emnist-mnist-train-labels-idx1-ubyte"
+#define TRAIN_IMG "data/MNIST/raw/train-images-idx3-ubyte"
+#define TRAIN_LAB "data/MNIST/raw/train-labels-idx1-ubyte"
 #define TEST_SIZE 10000
-#define TEST_IMG "data/EMNIST/raw/emnist-mnist-test-images-idx3-ubyte"
-#define TEST_LAB "data/EMNIST/raw/emnist-mnist-test-labels-idx1-ubyte"
+//#define TEST_IMG "data/EMNIST/raw/emnist-mnist-test-images-idx3-ubyte"
+//#define TEST_LAB "data/EMNIST/raw/emnist-mnist-test-labels-idx1-ubyte"
+#define TEST_IMG "data/MNIST/raw/t10k-images-idx3-ubyte"
+#define TEST_LAB "data/MNIST/raw/t10k-labels-idx1-ubyte"
 #else /* EMNIST */
 #define CATEGORIES 47
 #define TRAIN_SIZE 112800
@@ -103,7 +107,6 @@ TestKaggle(float[28,28] in, float[64,5,5] k1, float[64] b1,
 
 int main()
 {
-   
    epochs, batchsize, trainings, tests, rate = CnnReadParameters( 20, 100, 1000, 10000, 0.5f);
 
    k1 = genarray( [64,5,5], 1f/25f);
@@ -114,19 +117,19 @@ int main()
    b = genarray( [CATEGORIES], 1f/tof(CATEGORIES));
 
    printf( "Reading training images ...\n");
-   training_images = ( float[60000,28,28]) mnist::ReadImages( "tutorial/train-images.idx3-ubyte");
+   training_images = ( float[TRAIN_SIZE,28,28]) mnist::ReadImages( TRAIN_IMG);
    printf( "Read %d training images ...\n", shape(training_images)[0]);
 
    printf( "Reading training labels ...\n");
-   training_labels = ( int[60000]) mnist::ReadLabels( CATEGORIES, "tutorial/train-labels.idx1-ubyte");
+   training_labels = ( int[TRAIN_SIZE]) mnist::ReadLabels( CATEGORIES, TRAIN_LAB);
    printf( "Read %d training labels ...\n", shape(training_labels)[0]);
 
    printf( "Reading test images ...\n");
-   test_images = (float[10000,28,28])mnist::ReadImages( "tutorial/t10k-images.idx3-ubyte");
+   test_images = (float[TEST_SIZE,28,28])mnist::ReadImages( TEST_IMG);
    printf( "Read %d training images ...\n", shape(test_images)[0]);
 
    printf( "Reading test labels ...\n");
-   test_labels = (int[10000])mnist::ReadLabels( CATEGORIES, "tutorial/t10k-labels.idx1-ubyte");
+   test_labels = (int[TEST_SIZE])mnist::ReadLabels( CATEGORIES, TEST_LAB);
    printf( "Read %d training labels ...\n", shape(test_labels)[0]);
 
    printf( "Running Zhang with %d epochs, batchsize %d, %d training images, %d tests, and a rate of %f\n",
@@ -137,11 +140,11 @@ int main()
 
    i1 = getInterval( "training", 0);
    i2 = getInterval( "test", 1);
-   
+
    start( i1);
    for( epoch = 1; epoch <=epochs; epoch++) {
       error = 0d;
-      for( i=0; i< trainings/batchsize; i++) { 
+      for( i=0; i< trainings/batchsize; i++) {
          bd_k1, bd_b1, bd_k2, bd_b2, bd_fc, bd_b, berr
             = with {
                  (.<= iv <= .) {
