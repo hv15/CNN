@@ -7,7 +7,7 @@ SAC2C_CALL = $(SAC2C) $(SACFLAGS)
 # uppcase function
 UC = $(shell echo '$1' | tr '[:lower:]' '[:upper:]')
 
-.PHONY: all quick mnist emnist kaggle_mnist kaggle_emnist
+.PHONY: all quick cnn_mnist cnn_emnist kaggle_mnist kaggle_emnist
 .SECONDARY:
 
 all: cnn_mnist cnn_emnist kaggle_mnist kaggle_emnist

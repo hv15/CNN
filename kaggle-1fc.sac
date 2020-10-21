@@ -34,8 +34,8 @@ use StdIO: all;
 //specialize float[*] MultiConv( float[6,12,12] in, float[12,6,5,5] weights, float[12] bias);
 //specialize float[*] MultiConv( float[12,1,4,4] in, float[CATEGORIES,12,1,4,4] weights, float[CATEGORIES] bias);
 
-specialize float[*], float[*], float[*] BackMultiConv( float[64,24,24] d_out, float[64,5,5] weights, float[28,28] in, float[6] bias);
-specialize float[*], float[*], float[*] BackMultiConv( float[128,1,8,8] d_out, float[128,64,5,5] weights, float[64,12,12] in, float[12] bias);
+specialize float[*], float[*], float[*] BackMultiConv( float[64,24,24] d_out, float[64,5,5] weights, float[28,28] in, float[64] bias);
+specialize float[*], float[*], float[*] BackMultiConv( float[128,1,8,8] d_out, float[128,64,5,5] weights, float[64,12,12] in, float[128] bias);
 specialize float[*], float[*], float[*] BackMultiConv( float[CATEGORIES,1,1,1,1] d_out, float[CATEGORIES,128,1,4,4] weights, float[128,1,4,4] in, float[CATEGORIES] bias);
 specialize int MaxPos( float[CATEGORIES,1,1,1,1] output);
 
