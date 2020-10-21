@@ -11,7 +11,7 @@ UC = $(shell echo '$1' | tr '[:lower:]' '[:upper:]')
 .SECONDARY:
 
 all: cnn_mnist cnn_emnist kaggle_mnist kaggle_emnist
-quick: cnn_mnist_seq cnn_emnist_seq
+quick: cnn_mnist_seq cnn_emnist_seq kaggle_mnist_seq kaggle_emnist_seq
 
 cnn_mnist: cnn_mnist_seq cnn_mnist_mt cnn_mnist_cuda cnn_mnist_cuda_reg
 cnn_emnist: cnn_emnist_seq cnn_emnist_mt cnn_emnist_cuda cnn_emnist_cuda_reg
