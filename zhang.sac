@@ -224,7 +224,9 @@ int main()
    i1 = getInterval( "training", 0);
    i2 = getInterval( "test", 1);
 
-   k1_shp, b1_shp, k2_shp, b2_shp, fc_shp, b_shp, err_shp, flops = 
+#ifdef FLOPS
+
+   k1_shp, b1_shp, k2_shp, b2_shp, fc_shp, b_shp, err_shp, flops =
              TrainZhangFlop( shape( training_images[0]), shape(k1), shape(b1),
                              shape(k2), shape(b2),
                              shape(fc), shape(b),
@@ -244,6 +246,7 @@ int main()
    printf( "total flops for testing %d images: %s\n", tests,
             flops2String( testing_flops));
 
+#endif
 
    if (epochs > 0) {
       start( i1);
@@ -272,9 +275,9 @@ int main()
             b2 = b2-rate*averageOuter( bd_b2);
             fc = fc-rate*averageOuter( bd_fc);
             b = b-rate*averageOuter( bd_b);
-   
+
             error += tod(sum(berr));
-   
+
          }
          printf( "The mean error of epoch %d is %f\n",
                  epoch,
@@ -282,13 +285,15 @@ int main()
       }
       end( i1);
       printResult( i1);
-   
-      time, unit_str = returnResultUnit( i1);
+
+#ifdef FLOPS
+      me, unit_str = returnResultUnit( i1);
       training_flops_sec = training_flops / time;
-   
+
       printf( "flop performance for training %d epochs on %d images: %s/%s\n", epochs, trainings,
                flops2String( training_flops_sec), unit_str);
-   
+#endif
+
       start( i2);
 
       out = with {
@@ -314,11 +319,13 @@ int main()
               error / tod( tests) );
       printResult( i2);
 
+#ifdef FLOPS
       time, unit_str = returnResultUnit( i2);
       training_flops_sec = testing_flops / time;
 
       printf( "flop performance for testing %d images: %s/%s\n", tests,
                flops2String( training_flops_sec), unit_str);
+#endif
 
    }
 
